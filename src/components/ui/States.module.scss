@@ -1,0 +1,48 @@
+.state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+  padding: 56px 24px;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.01);
+
+  h3 {
+    font-size: 17px;
+    margin-top: 8px;
+  }
+  p {
+    color: var(--text-muted);
+    max-width: 380px;
+    font-size: 14px;
+  }
+}
+
+.icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-size: 22px;
+}
+
+.danger {
+  color: #fb7185;
+  background: var(--danger-soft);
+}
+
+.action {
+  margin-top: 12px;
+}
+
+.loading {
+  color: var(--text-muted);
+  font-size: 13px;
+  margin-bottom: 12px;
+}

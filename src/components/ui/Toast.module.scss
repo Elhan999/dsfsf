@@ -1,0 +1,83 @@
+@use '../../styles/mixins' as *;
+
+.viewport {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: min(380px, calc(100vw - 32px));
+
+  @include mobile {
+    right: 16px;
+    bottom: calc(var(--bottom-nav-offset, 72px) + 8px);
+  }
+}
+
+.toast {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 14px 12px 14px 16px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  animation: fade-up 0.25s ease both;
+}
+
+.link {
+  display: flex;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+
+  svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+    font-size: 18px;
+  }
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+
+  strong {
+    font-size: 14px;
+    font-weight: 600;
+  }
+  span {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+}
+
+.success {
+  color: var(--success);
+}
+.error {
+  color: var(--danger);
+}
+.info {
+  color: var(--accent);
+}
+
+.close {
+  background: none;
+  border: 0;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 2px;
+  display: grid;
+  place-items: center;
+  border-radius: 6px;
+
+  &:hover {
+    color: var(--text);
+  }
+}

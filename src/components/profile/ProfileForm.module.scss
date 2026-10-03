@@ -1,0 +1,37 @@
+@use '../../styles/mixins' as *;
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+
+  @include mobile {
+    grid-template-columns: 1fr;
+  }
+}
+
+.grid3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+
+  @include tablet-down {
+    grid-template-columns: 1fr;
+  }
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.error {
+  color: #fb7185;
+  font-size: 14px;
+}

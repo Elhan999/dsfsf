@@ -1,0 +1,114 @@
+@use '../../styles/mixins' as *;
+
+.item {
+  list-style: none;
+  border-bottom: 1px solid var(--border);
+
+  &:last-child {
+    border-bottom: 0;
+  }
+}
+
+.button {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  width: 100%;
+  padding: 18px 20px;
+  border: 0;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.025);
+  }
+
+  @include mobile {
+    padding: 16px;
+  }
+}
+
+.unread .button {
+  background: linear-gradient(90deg, rgba(91, 107, 255, 0.07), transparent 60%);
+
+  strong {
+    color: var(--text);
+  }
+}
+
+.icon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  flex-shrink: 0;
+  font-size: 18px;
+}
+
+.accent {
+  background: var(--accent-soft);
+  color: #a5b0ff;
+}
+.success {
+  background: var(--success-soft);
+  color: #4ade80;
+}
+.danger {
+  background: var(--danger-soft);
+  color: #fb7185;
+}
+.violet {
+  background: rgba(139, 92, 246, 0.15);
+  color: #c4b5fd;
+}
+.neutral {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-secondary);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+
+  strong {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-secondary);
+  }
+}
+
+.kind {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.message {
+  font-size: 14px;
+  color: var(--text-muted);
+  @include line-clamp(2);
+}
+
+.time {
+  font-size: 12px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  padding-right: 16px;
+}
+
+.dot {
+  position: absolute;
+  right: 18px;
+  top: 24px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 12px var(--accent);
+}

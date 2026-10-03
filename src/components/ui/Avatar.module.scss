@@ -1,0 +1,35 @@
+.avatar {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+  border-radius: 50%;
+
+  img,
+  .fallback {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+}
+
+.fallback {
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.status {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  border-radius: 50%;
+  background: #4b5263;
+  border: 2px solid var(--surface);
+}
+
+.online {
+  background: var(--success);
+}

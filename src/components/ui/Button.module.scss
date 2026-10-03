@@ -1,0 +1,147 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    transform 0.1s ease,
+    box-shadow 0.15s ease;
+
+  &:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  svg {
+    flex-shrink: 0;
+  }
+}
+
+.sm {
+  height: 32px;
+  padding: 0 12px;
+  font-size: 13px;
+  border-radius: 8px;
+}
+.md {
+  height: 40px;
+  padding: 0 16px;
+  font-size: 14px;
+}
+.lg {
+  height: 48px;
+  padding: 0 22px;
+  font-size: 15px;
+  border-radius: 12px;
+}
+.block {
+  width: 100%;
+}
+
+.primary {
+  background: var(--accent);
+  color: #fff;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.08) inset,
+    0 8px 24px -8px rgba(91, 107, 255, 0.6);
+
+  &:hover:not(:disabled) {
+    background: var(--accent-hover);
+  }
+}
+
+.secondary {
+  background: var(--surface-2);
+  border-color: var(--border-strong);
+  color: var(--text);
+
+  &:hover:not(:disabled) {
+    background: #1a1d26;
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+}
+
+.ghost {
+  background: transparent;
+  color: var(--text-secondary);
+
+  &:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text);
+  }
+}
+
+.danger {
+  background: var(--danger-soft);
+  border-color: rgba(244, 63, 94, 0.25);
+  color: #fb7185;
+
+  &:hover:not(:disabled) {
+    background: rgba(244, 63, 94, 0.2);
+  }
+}
+
+.success {
+  background: var(--success-soft);
+  border-color: rgba(34, 197, 94, 0.25);
+  color: #4ade80;
+
+  &:hover:not(:disabled) {
+    background: rgba(34, 197, 94, 0.2);
+  }
+}
+
+.spinner {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.iconButton {
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 18px;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+
+  &:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}

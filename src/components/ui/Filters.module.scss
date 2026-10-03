@@ -1,0 +1,45 @@
+@use '../../styles/mixins' as *;
+
+.bar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  align-items: end;
+  margin-bottom: 20px;
+
+  @include mobile {
+    grid-template-columns: 1fr 1fr;
+
+    > :first-child {
+      grid-column: 1 / -1;
+    }
+  }
+}
+
+.skills {
+  grid-column: span 2;
+
+  @include mobile {
+    grid-column: 1 / -1;
+  }
+}
+
+.meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  min-height: 32px;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.search {
+  margin-bottom: 20px;
+
+  input {
+    height: 52px !important;
+    font-size: 16px !important;
+  }
+}

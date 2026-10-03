@@ -1,0 +1,88 @@
+@use '../../styles/mixins' as *;
+
+.page {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 48px 40px 80px;
+
+  @include tablet-down {
+    padding: 36px 28px 64px;
+  }
+
+  @include mobile {
+    padding: 24px 16px 40px;
+  }
+}
+
+.wide {
+  max-width: 1320px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  margin-bottom: 32px;
+
+  h1 {
+    font-size: clamp(28px, 4vw, 40px);
+    letter-spacing: -0.035em;
+  }
+
+  @include mobile {
+    flex-direction: column;
+    align-items: stretch;
+    margin-bottom: 24px;
+  }
+}
+
+.eyebrow {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+
+.description {
+  margin-top: 10px;
+  font-size: 16px;
+  color: var(--text-muted);
+  max-width: 560px;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.section {
+  margin-top: 48px;
+
+  &:first-of-type {
+    margin-top: 0;
+  }
+}
+
+.sectionHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 18px;
+
+  h2 {
+    font-size: 19px;
+  }
+
+  a {
+    font-size: 14px;
+    color: var(--text-muted);
+
+    &:hover {
+      color: var(--text);
+    }
+  }
+}

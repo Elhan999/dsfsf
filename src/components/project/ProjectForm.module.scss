@@ -1,0 +1,188 @@
+@use '../../styles/mixins' as *;
+
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.step button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 0 0;
+  border: 0;
+  border-top: 2px solid var(--border-strong);
+  background: none;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 500;
+  text-align: left;
+  cursor: default;
+
+  @include mobile {
+    justify-content: center;
+  }
+}
+
+.stepIndex {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid var(--border-strong);
+  font-size: 11px;
+  flex-shrink: 0;
+}
+
+.stepLabel {
+  @include mobile {
+    display: none;
+  }
+}
+
+.current button {
+  border-top-color: var(--accent);
+  color: var(--text);
+
+  .stepIndex {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: #fff;
+  }
+}
+
+.done button {
+  border-top-color: rgba(91, 107, 255, 0.5);
+  color: var(--text-secondary);
+  cursor: pointer;
+
+  .stepIndex {
+    background: var(--accent-soft);
+    border-color: transparent;
+    color: #a5b0ff;
+  }
+}
+
+.panel {
+  @include card;
+  padding: 32px;
+
+  @include mobile {
+    padding: 20px;
+  }
+}
+
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  animation: fade-up 0.3s ease both;
+}
+
+.intro {
+  margin-bottom: 4px;
+
+  h2 {
+    font-size: 22px;
+  }
+
+  p {
+    margin-top: 6px;
+    color: var(--text-muted);
+  }
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+
+  @include mobile {
+    grid-template-columns: 1fr;
+  }
+}
+
+.rowWide {
+  display: grid;
+  grid-template-columns: 1fr 110px;
+  gap: 16px;
+}
+
+.roleCard {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+}
+
+.roleHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 32px;
+
+  span {
+    font-weight: 600;
+  }
+}
+
+.preview {
+  max-width: 380px;
+}
+
+.summary {
+  display: grid;
+  gap: 1px;
+  margin: 0;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--border);
+
+  div {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 16px;
+    padding: 14px 18px;
+    background: var(--bg-elevated);
+  }
+
+  dt {
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+
+  dd {
+    margin: 0;
+    font-size: 14px;
+  }
+}
+
+.error {
+  color: #fb7185;
+  font-size: 14px;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}

@@ -1,0 +1,8 @@
+// Design tokens exposed as SCSS for media queries; colors live in CSS custom properties (globals).
+$bp-mobile: 390px;
+$bp-tablet: 768px;
+$bp-laptop: 1024px;
+$bp-desktop: 1440px;
+
+$sidebar-width: 248px;
+$bottom-nav-height: 64px;

@@ -1,0 +1,156 @@
+@use '../../styles/mixins' as *;
+
+.hero {
+  @include card;
+  overflow: hidden;
+  margin-bottom: 48px;
+}
+
+.banner {
+  height: 140px;
+  background:
+    radial-gradient(ellipse at 15% 0%, rgba(91, 107, 255, 0.55), transparent 60%),
+    radial-gradient(ellipse at 85% 100%, rgba(139, 92, 246, 0.45), transparent 60%),
+    linear-gradient(180deg, #111427, var(--surface));
+  border-bottom: 1px solid var(--border);
+
+  @include mobile {
+    height: 96px;
+  }
+}
+
+.heroBody {
+  display: flex;
+  align-items: flex-end;
+  gap: 24px;
+  padding: 0 32px;
+  margin-top: -48px;
+
+  @include mobile {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 0 20px;
+  }
+}
+
+.avatar {
+  box-shadow: 0 0 0 5px var(--surface);
+  border-radius: 50%;
+}
+
+.identity {
+  flex: 1;
+  min-width: 0;
+  padding-bottom: 4px;
+
+  h1 {
+    font-size: clamp(26px, 3.5vw, 34px);
+  }
+}
+
+.username {
+  color: var(--text-muted);
+  font-size: 14px;
+  margin-top: 2px;
+}
+
+.jobTitle {
+  margin-top: 8px;
+  font-size: 16px;
+  color: var(--text-secondary);
+}
+
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.joined {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-left: 4px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 4px;
+}
+
+.bio {
+  padding: 24px 32px 32px;
+  font-size: 15px;
+  color: var(--text-secondary);
+  max-width: 720px;
+  white-space: pre-line;
+
+  @include mobile {
+    padding: 20px;
+  }
+}
+
+.sections {
+  display: flex;
+  flex-direction: column;
+}
+
+.muted {
+  color: var(--text-muted);
+
+  a {
+    color: #a5b0ff;
+  }
+}
+
+.teams {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.team {
+  @include interactive-card;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+}
+
+.teamIcon {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: var(--accent-soft);
+  color: #a5b0ff;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.teamText {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+
+  strong {
+    font-weight: 500;
+    font-size: 14px;
+  }
+  small {
+    color: var(--text-muted);
+    font-size: 12px;
+  }
+}

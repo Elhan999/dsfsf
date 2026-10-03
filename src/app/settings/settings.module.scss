@@ -1,0 +1,30 @@
+@use '../../styles/mixins' as *;
+
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.card {
+  @include card;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 28px;
+
+  header {
+    h2 {
+      font-size: 18px;
+    }
+    p {
+      margin-top: 4px;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+  }
+
+  @include mobile {
+    padding: 20px;
+  }
+}

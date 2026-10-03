@@ -2,7 +2,7 @@ import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import type { ApiError, ApiSuccess, AuthSession } from '@/types/api';
 import { tokenStore } from './tokenStore';
 
-export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4100/api';
+export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? '/api';
 
 export const api = axios.create({
   baseURL: API_URL,

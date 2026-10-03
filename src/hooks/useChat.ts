@@ -48,6 +48,8 @@ export function useChat(projectId: number | undefined) {
     getNextPageParam: (last) =>
       last.pagination.page * last.pagination.limit < last.pagination.total ? last.pagination.page + 1 : undefined,
     enabled: !!projectId,
+    // No socket push on serverless hosting: poll for new messages while the chat is open.
+    refetchInterval: 4000,
   });
 
   // Page 1 is newest; render oldest → newest.
@@ -144,7 +146,7 @@ export function useChat(projectId: number | undefined) {
       );
 
       if (send({ type: 'send_message', projectId, content })) return;
-      // Socket unavailable: fall back to REST (the server still broadcasts to everyone else).
+      // Socket unavailable: send over REST; other members pick it up on their next poll.
       try {
         const saved = await teamsService.sendMessage(projectId, content);
         qc.setQueryData<Pages>(key, (old) => appendMessage(old, saved));

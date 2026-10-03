@@ -2,14 +2,13 @@
 
 import { useQueryClient } from '@tanstack/react-query';
 import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { refreshAccessToken } from '@/lib/api';
 import { queryKeys } from '@/lib/queryKeys';
-import { tokenStore } from '@/lib/tokenStore';
+import { notificationsService } from '@/services/notifications.service';
 import type { ClientEvent, NotificationList, ServerEvent } from '@/types/api';
 import { useAuth } from './useAuth';
 import { useToast } from './useToast';
 
-export const WS_URL = process.env.NEXT_PUBLIC_WS_URL ?? 'ws://localhost:4100/ws';
+const POLL_INTERVAL = 10_000;
 
 type ConnectionStatus = 'idle' | 'connecting' | 'open' | 'closed';
 type Handler = (event: ServerEvent) => void;
@@ -36,11 +35,10 @@ export function SocketProvider({ children }: { children: ReactNode }) {
   const { status: authStatus } = useAuth();
   const queryClient = useQueryClient();
   const { toast } = useToast();
-  const [status, setStatus] = useState<ConnectionStatus>('idle');
+  const status: ConnectionStatus = 'idle';
   const [onlineUserIds, setOnlineUserIds] = useState<Set<number>>(new Set());
   // Presence we have heard about explicitly; users not in here fall back to the API's isOnline.
   const [knownPresence, setKnownPresence] = useState<Map<number, boolean>>(new Map());
-  const socketRef = useRef<WebSocket | null>(null);
   const handlers = useRef(new Set<Handler>());
 
   const setPresence = useCallback((ids: number[], online: boolean) => {
@@ -105,64 +103,43 @@ export function SocketProvider({ children }: { children: ReactNode }) {
     [queryClient, setPresence, toast],
   );
 
+  // Serverless hosting has no persistent connections, so new notifications are polled instead.
   useEffect(() => {
     if (authStatus !== 'authenticated') return;
     let cancelled = false;
-    let attempt = 0;
-    let retryTimer: ReturnType<typeof setTimeout>;
-    let pingTimer: ReturnType<typeof setInterval>;
+    let lastSeenId: number | null = null;
 
-    const connect = async () => {
+    const poll = async () => {
+      let list: NotificationList;
+      try {
+        list = await notificationsService.list(1, 10);
+      } catch {
+        return;
+      }
       if (cancelled) return;
-      // After a failed attempt the access token may have expired — refresh before retrying.
-      const token = attempt > 0 ? await refreshAccessToken() : tokenStore.get();
-      if (!token || cancelled) return;
-      setStatus('connecting');
-      const socket = new WebSocket(`${WS_URL}?token=${encodeURIComponent(token)}`);
-      socketRef.current = socket;
-
-      socket.onopen = () => {
-        attempt = 0;
-        setStatus('open');
-        pingTimer = setInterval(() => socket.send(JSON.stringify({ type: 'ping' })), 25_000);
-      };
-      socket.onmessage = (message) => {
-        let event: ServerEvent;
-        try {
-          event = JSON.parse(message.data as string);
-        } catch {
-          return;
-        }
-        handleGlobal(event);
-        handlers.current.forEach((h) => h(event));
-      };
-      socket.onclose = () => {
-        clearInterval(pingTimer);
-        if (socketRef.current === socket) socketRef.current = null;
-        setStatus('closed');
-        if (cancelled) return;
-        attempt += 1;
-        retryTimer = setTimeout(connect, Math.min(1000 * 2 ** attempt, 20_000));
-      };
+      const newestId = list.data[0]?.id ?? 0;
+      // The first poll only records where we are; anything older than that is not "new".
+      if (lastSeenId !== null) {
+        const fresh = list.data.filter((n) => n.id > lastSeenId!).reverse();
+        fresh.forEach((data) => {
+          const event: ServerEvent = { type: 'new_notification', data, unreadCount: list.unreadCount };
+          handleGlobal(event);
+          handlers.current.forEach((h) => h(event));
+        });
+      }
+      lastSeenId = Math.max(lastSeenId ?? 0, newestId);
     };
 
-    connect();
+    poll();
+    const timer = setInterval(poll, POLL_INTERVAL);
     return () => {
       cancelled = true;
-      clearTimeout(retryTimer);
-      clearInterval(pingTimer);
-      socketRef.current?.close();
-      socketRef.current = null;
-      setStatus('idle');
+      clearInterval(timer);
     };
   }, [authStatus, handleGlobal]);
 
-  const send = useCallback((event: ClientEvent) => {
-    const socket = socketRef.current;
-    if (!socket || socket.readyState !== WebSocket.OPEN) return false;
-    socket.send(JSON.stringify(event));
-    return true;
-  }, []);
+  // No live connection to send over: callers fall back to the REST API.
+  const send = useCallback((_event: ClientEvent) => false, []);
 
   const subscribe = useCallback((handler: Handler) => {
     handlers.current.add(handler);

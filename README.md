@@ -5,9 +5,9 @@ A platform for finding teammates and building projects together.
 | Part | Location | Stack |
 | --- | --- | --- |
 | Frontend | `src/` | Next.js (App Router) · React · TypeScript · SCSS modules · Axios · TanStack Query · React Hook Form · Zod · React Icons |
-| Backend | `server/` | Node.js · Express · TypeScript · PostgreSQL (`pg`) · JWT · bcryptjs · `ws` · Zod |
+| Backend | `server/` | Node.js · Express · TypeScript · PostgreSQL (`pg`) · JWT · bcryptjs · Zod |
 
-The two parts share no code. They talk only through the REST API and WebSocket contract below. Frontend types in `src/types/api.ts` mirror these response shapes.
+The two parts share no code. They talk only through the REST API below. Frontend types in `src/types/api.ts` mirror these response shapes.
 
 ## Running locally
 
@@ -18,7 +18,7 @@ cp .env.example .env          # set DATABASE_URL (create the database first) and
 npm install
 npm run migrate               # applies migrations/*.sql
 npm run seed                  # demo data: 5 users, 5 projects, 13 skills
-npm run dev                   # http://localhost:4100  (WS: ws://localhost:4100/ws)
+npm run dev                   # http://localhost:4100
 
 # 2. Frontend (repo root)
 cp .env.example .env.local
@@ -32,7 +32,7 @@ Seeded logins, all with password `password123`: `timur@`, `aida@`, `bek@`, `dani
 
 ### Environment
 
-Frontend (`.env.local`): `NEXT_PUBLIC_API_URL`, `NEXT_PUBLIC_WS_URL`
+Frontend (`.env.local`): `BACKEND_URL` — the Next.js app proxies `/api/*` to it, so the browser talks to one origin
 
 Backend (`server/.env`): `PORT`, `DATABASE_URL`, `JWT_ACCESS_SECRET`, `JWT_REFRESH_SECRET`, `CLIENT_URL`, `AI_API_KEY`, `AI_MODEL`
 
@@ -90,38 +90,20 @@ Route (routes/index.ts) → Controller (validates with Zod, no SQL) → Service 
 | DELETE 🔒 | `/projects/:id/members/:userId` | owner only |
 | POST 🔒 | `/projects/:id/leave` | member (not owner) |
 | GET 🔒 | `/projects/:id/messages` | members only; `?page&limit` (page 1 = newest; each page is ordered oldest → newest) |
-| POST 🔒 | `/projects/:id/messages` | `{content}`; REST fallback that also broadcasts over WS |
+| POST 🔒 | `/projects/:id/messages` | `{content}` |
 | GET 🔒 | `/notifications` | paginated, plus top-level `unreadCount` |
 | GET 🔒 | `/notifications/unread-count` | |
 | PATCH 🔒 | `/notifications/:id/read` · `/notifications/read-all` | |
 | GET 🔒 | `/recommendations` | `{projects, users}` ranked by skill overlap |
 | POST 🔒 | `/ai/match` | `{description}` → `{requirements, matches:[{userId, matchPercent, matchedSkills, missingSkills, user}], source: "ai"\|"keywords"}` |
 
-## WebSocket
+## Realtime
 
-Connect with `ws://host/ws?token=<accessToken>`, or `ws://host/ws/project/:projectId?token=…` to auto-join a room. The server verifies the JWT on upgrade and checks project membership before any join or send.
+The app is built for serverless hosting, so there are no persistent connections: the chat refetches messages every 4 s while open, and the client polls `/notifications` every 10 s to show toasts for new ones. Online presence and typing indicators are not available.
 
-Client → server:
+## Deploying to Vercel
 
-```json
-{ "type": "join_project", "projectId": 12 }
-{ "type": "leave_project", "projectId": 12 }
-{ "type": "send_message", "projectId": 12, "content": "Всем привет!" }
-{ "type": "typing_start", "projectId": 12 }
-{ "type": "typing_stop", "projectId": 12 }
-```
+Import the repository twice:
 
-Server → client:
-
-| type | payload |
-| --- | --- |
-| `connected` | `userId` |
-| `joined_project` | `projectId, onlineUserIds` |
-| `new_message` | `data: {id, projectId, sender:{id,name,username,avatar,jobTitle}, content, createdAt}` |
-| `typing_start` / `typing_stop` | `projectId, user:{id,name}` |
-| `user_online` / `user_offline` | `userId` (sent to teammates) |
-| `new_notification` | `data: Notification, unreadCount` |
-| `member_left` / `removed_from_project` | `projectId[, userId]` |
-| `error` | `message[, event, projectId]` |
-
-Members who aren't viewing a team chat get at most one unread `NEW_MESSAGE` notification per project.
+1. **API** — Root Directory `server`. Add a Postgres database (Neon from the Vercel Marketplace sets `DATABASE_URL`) and set `JWT_ACCESS_SECRET`, `JWT_REFRESH_SECRET`, `CLIENT_URL` (the web app's URL), optionally `AI_API_KEY`. Migrations run on every build (`server/vercel.json`).
+2. **Web** — Root Directory `./`. Set `BACKEND_URL` to the API project's URL.

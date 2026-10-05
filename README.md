@@ -103,7 +103,9 @@ The app is built for serverless hosting, so there are no persistent connections:
 
 ## Deploying to Vercel
 
-Import the repository twice:
+`vercel.json` deploys both parts as one Vercel project with [Services](https://vercel.com/docs/services): `/api/*` goes to the Express app in `server/`, everything else to Next.js, all on one domain. Import the repository once with Root Directory `./`, then:
 
-1. **API** — Root Directory `server`. Add a Postgres database (Neon from the Vercel Marketplace sets `DATABASE_URL`) and set `JWT_ACCESS_SECRET`, `JWT_REFRESH_SECRET`, `CLIENT_URL` (the web app's URL), optionally `AI_API_KEY`. Migrations run on every build (`server/vercel.json`).
-2. **Web** — Root Directory `./`. Set `BACKEND_URL` to the API project's URL.
+- add a Postgres database (Neon from the Vercel Marketplace sets `DATABASE_URL`);
+- set `JWT_ACCESS_SECRET` and `JWT_REFRESH_SECRET`, optionally `AI_API_KEY`.
+
+Migrations run on every build of the `server` service.
